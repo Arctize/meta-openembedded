@@ -1,4 +1,4 @@
-From f88d9b82e8bd8ae38fba666b5825ffb41769f81a Mon Sep 17 00:00:00 2001
+From 30fc8b8516adf2a888054657e9c811eafaba952a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Tue, 9 Aug 2022 12:25:22 -0700
 Subject: [PATCH] monkey: Fix TLS detection testcase
@@ -19,10 +19,10 @@ Upstream-Status: Pending
  1 file changed, 2 insertions(+)
 
 diff --git a/lib/monkey/CMakeLists.txt b/lib/monkey/CMakeLists.txt
-index 15e62e8..96ac2bd 100644
+index 95d8cc1..b8f1de5 100644
 --- a/lib/monkey/CMakeLists.txt
 +++ b/lib/monkey/CMakeLists.txt
-@@ -178,6 +178,8 @@ endif()
+@@ -192,6 +192,8 @@ endif()
  # Use old Pthread TLS
  if(NOT MK_PTHREAD_TLS)
    check_c_source_compiles("
@@ -31,6 +31,3 @@ index 15e62e8..96ac2bd 100644
       __thread int a;
       int main() {
           __tls_get_addr(0);
--- 
-2.37.1
-

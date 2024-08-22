@@ -1,4 +1,4 @@
-From c41653e856d05ed430d22f8b311714ff756a0e0b Mon Sep 17 00:00:00 2001
+From 66078fa588e5efe1a3ce017fc24b20cd2877a516 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 23 Mar 2023 18:05:27 -0700
 Subject: [PATCH] cmake: Do not check for upstart on build host
@@ -23,10 +23,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 8 deletions(-)
 
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index bb30b2a..c63b6d8 100644
+index 084f2c5..99e335f 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -486,14 +486,6 @@ if(FLB_BINARY)
+@@ -540,14 +540,6 @@ if(FLB_BINARY)
        )
      install(FILES ${FLB_SYSTEMD_SCRIPT} COMPONENT binary DESTINATION ${SYSTEMD_UNITDIR})
      install(DIRECTORY DESTINATION ${FLB_INSTALL_CONFDIR} COMPONENT binary)
@@ -41,6 +41,3 @@ index bb30b2a..c63b6d8 100644
    else()
      # FIXME: should we support Sysv init script ?
    endif()
--- 
-2.40.0
-

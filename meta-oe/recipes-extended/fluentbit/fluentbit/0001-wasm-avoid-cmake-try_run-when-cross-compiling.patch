@@ -1,0 +1,41 @@
+From f72d35e5fc8e720de493b4061a54184a5df1f10c Mon Sep 17 00:00:00 2001
+From: Patrick Wicki <patrick.wicki@siemens.com>
+Date: Tue, 18 Jun 2024 15:35:46 +0200
+Subject: [PATCH] wasm: avoid cmake try_run when cross-compiling for x86
+
+try_run does not work when cross-compiling because the test program
+cannot be executed. But when building for x86 this code path depends on
+its output:
+
+| CMake Error: try_run() invoked in cross-compiling mode, please set the following cache variables appropriately:
+|    TEST_WRGSBASE_RESULT (advanced)
+| For details see .../fluentbit/3.0.7/build/TryRunResults.cmake
+|      Write linear memory base addr to x86 GS register disabled
+| -- Configuring incomplete, errors occurred!
+
+Since we cannot run the test program, assume that the instruction is not
+available and disable the option.
+
+This issue is no longer present in newer versions of WAMR (1.3.2+), the
+patch can thus be dropped once fluentbit upgrades the library.
+
+Upstream-Status: Pending [https://github.com/fluent/fluent-bit/pull/8744]
+
+Signed-off-by: Patrick Wicki <patrick.wicki@siemens.com>
+---
+ .../build-scripts/config_common.cmake                         | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/wasm-micro-runtime-WAMR-1.3.0/build-scripts/config_common.cmake b/lib/wasm-micro-runtime-WAMR-1.3.0/build-scripts/config_common.cmake
+index e73ebc8..fd8ac28 100644
+--- a/lib/wasm-micro-runtime-WAMR-1.3.0/build-scripts/config_common.cmake
++++ b/lib/wasm-micro-runtime-WAMR-1.3.0/build-scripts/config_common.cmake
+@@ -408,7 +408,7 @@ if (WAMR_BUILD_STATIC_PGO EQUAL 1)
+   add_definitions (-DWASM_ENABLE_STATIC_PGO=1)
+   message ("     AOT static PGO enabled")
+ endif ()
+-if (WAMR_DISABLE_WRITE_GS_BASE EQUAL 1)
++if (WAMR_DISABLE_WRITE_GS_BASE EQUAL 1 OR CMAKE_CROSSCOMPILING)
+   add_definitions (-DWASM_DISABLE_WRITE_GS_BASE=1)
+   message ("     Write linear memory base addr to x86 GS register disabled")
+ elseif (WAMR_BUILD_TARGET STREQUAL "X86_64"
